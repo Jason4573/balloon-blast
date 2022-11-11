@@ -1,83 +1,58 @@
 import pygame
-import os
-pygame.font.init()
+import sys
+import time
+import random
 
-width,height =900,500
-white_color=(255,255,255)
-fps= 60
-winner_font=pygame.font.SysFont("comicsans",30)
-balloon_image=pygame.image.load('balloon.png')
-balloon_resize=pygame.transform.scale(balloon_image,(40,45))
-shooter_image=pygame.image.load('shooter.png')
-shooter_resize=pygame.transform.scale(shooter_image,(40,45))
-text="Bullet collided with balloon"
-text1="Missed shots: "
-bullet_image=pygame.image.load('bullet.png')
-bullet_resize=pygame.transform.scale(bullet_image,(25,20))
+pygame.init()
+#This puts a title on the screen 
+pygame.display.set_caption('Pinball blast')
 
-win=pygame.display.set_mode((width,height))
-pygame.display.set_caption("Balloon shooting game")
+#this loads the sprites image
+pinolaimg = pygame.image.load('Pinola looking left.png')
+#this reduces the size of the image by x0.2
+pinolaimg=pygame.transform.scale(pinolaimg,(167,162))
+#This create the main playing screen and set the backround to grey
+screen = pygame.display.set_mode((800,800))
 
-def draw_window(balloon_1,bullet_1):
-    win.fill(white_color)
-    score_text=winner_font.render(text1,1,(255,0,0))
-    win.blit(score_text, (550,50))
-    win.blit(balloon_resize,(balloon_1.x,balloon_1.y))
-    win.blit(shooter_resize,(750,350))
-    win.blit(bullet_resize,(bullet_1.x,bullet_1.y))
-    pygame.display.update()
+#This is the class for pinola sprite
+class pinola():
+        # defining attributes for class
+        def __init__ (self, x, y, image, scale, active):
+            pygame.sprite.Sprite.__init__(self)
+            self.x = x
+            self.y = y
+            self.vel = 2
+            #getting the cooridnates of the image
+            self.rect = pinolaimg.get_rect()
+            #setting the coordinates to the top left of the image
+            self.rect.topleft = [x,y]
+            self.rect.x = 2
+        def draw(self):
+                screen.blit(pinolaimg,(100,647))
+                self.vel += 2
+                
+            
+pinola_group = [5]
 
-def draw_winner(text,temp):
-    draw_text=winner_font.render(text,1,(255,0,0))
-    win.blit(draw_text, (350,250))
-    temp1=str(temp)
-    draw_text1=winner_font.render(temp1,1,(255,0,0))
-    win.blit(draw_text1, (790,50))
-    pygame.display.update()
-    pygame.time.delay(2000)
-    pygame.quit()
+pino1 = pinola(100,638,10,1,True)
 
-def main():
-    balloon_1=pygame.Rect(150,50,40,45)
-    bullet_1= pygame.Rect(745,350,25,20)
-    temp=0
-    z=0
-    k=0
-    za=0
-    k1=0
-    clock_fps=pygame.time.Clock()
-    run= True
-    while run:
-        clock_fps.tick(fps)
+pinola_group[0] = pino1
+
+#game loop
+#speed at which it is moving 
+vel=2
+run = True
+while True:
+        #This makes the backround grey
+        screen.fill((211,211,211))
+        #this puts the sprite in the game 
+        pinola_group[0].draw()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run=False
-
-        if k==0:
-           balloon_1.y+=1
-        if balloon_1.y==400:
-            k=1
-        if k==1:
-            balloon_1.y-=1
-            if balloon_1.y==50:
-                k=0
-        keys_pressed= pygame.key.get_pressed()
-        if keys_pressed[pygame.K_SPACE]: #it releases the bullets.
-            k1=1
-            z=10
-        bullet_1.x-=z
-        if balloon_1.colliderect(bullet_1):
-            collision="Collided with balloon"
-            draw_winner(text,za) 
-        if bullet_1.x<=2 and k1==1:
-            bullet_1= pygame.Rect(745,350,25,20)
-            za+=1
-            keys_pressed1= pygame.key.get_pressed()
-            if keys_pressed1[pygame.K_SPACE]: #it releases the bullets.
-                z=10
-            bullet_1.x-=z
-        draw_window(balloon_1,bullet_1)
-    pygame.quit()
-if __name__== "__main__" :
-     main()
-
+                if event.type == pygame.QUIT:
+                        run = False
+                #regestring a key being pressed
+                if event.type == pygame.KEYDOWN:
+                        # if the a key is pressed
+                        if event.key == pygame.K_a:
+                                print(self.rect.x)
+                                
